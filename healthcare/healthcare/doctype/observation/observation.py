@@ -3,12 +3,14 @@
 
 import json
 import re
+import requests
 
 import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.workflow import get_workflow_name, get_workflow_state_field
 from frappe.utils import flt, get_link_to_form, getdate, now_datetime, nowdate
+from frappe.contacts.doctype.address.address import address_query, get_address_display
 
 from erpnext.setup.doctype.terms_and_conditions.terms_and_conditions import (
 	get_terms_and_conditions,
@@ -19,9 +21,48 @@ class Observation(Document):
 	def validate(self):
 		self.set_age()
 		self.set_result_time()
-		self.set_status()
+		#self.set_status()
 		self.reference = get_observation_reference(self)
 		self.validate_input()
+		self.set_address_display()
+		self.calculate_distance()
+
+	def set_address_display(self):
+		if self.address:
+			self.address_display = get_address_display(frappe.get_doc("Address", self.address).as_dict())
+
+	def calculate_distance(self):
+		if self.latitude and self.longitude and self.service_unit_latitude and self.service_unit_longitude:
+			api_key = frappe.db.get_single_value("Google Settings", "api_key")
+			if not api_key:
+				return
+
+			try:
+				url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+				params = {
+					"origins": f"{self.latitude},{self.longitude}",
+					"destinations": f"{self.service_unit_latitude},{self.service_unit_longitude}",
+					"key": api_key
+				}
+
+				response = requests.get(url, params=params)
+				data = response.json()
+
+				if data.get("status") == "OK":
+					rows = data.get("rows", [])
+					if rows:
+						elements = rows[0].get("elements", [])
+						if elements and elements[0].get("status") == "OK":
+							# distance in km
+							distance_text = elements[0].get("distance", {}).get("text", "")
+							distance_value = elements[0].get("distance", {}).get("value", 0) # in meters
+
+							# Assuming the distance field expects km or similar, but the field type is Float. 
+							# Let's save it as km.
+							self.distance = flt(distance_value) / 1000.0
+			except Exception:
+				frappe.log_error("Google Maps Distance Matrix Error")
+
 
 	def on_update(self):
 		set_diagnostic_report_status(self)

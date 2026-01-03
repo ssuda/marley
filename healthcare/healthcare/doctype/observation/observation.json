@@ -23,12 +23,23 @@
   "section_break_i70a",
   "patient",
   "patient_name",
-  "column_break_qxq5",
+  "phone_number",
+  "latitude",
+  "longitude",
+  "column_break_oqtz",
   "age",
   "gender",
+  "address",
+  "address_display",
   "section_break_zz5k",
   "healthcare_practitioner",
   "practitioner_name",
+  "service_unit",
+  "column_break_zxoa",
+  "service_unit_address",
+  "service_unit_latitude",
+  "service_unit_longitude",
+  "distance",
   "template_details_section",
   "has_component",
   "preferred_display_name",
@@ -44,6 +55,9 @@
   "sample_collection_time",
   "column_break_yo05",
   "sample_status",
+  "reference_section",
+  "reference",
+  "column_break_2ts3",
   "result_section",
   "result_template",
   "result_attach",
@@ -63,10 +77,8 @@
   "interpretation_template",
   "result_interpretation",
   "observation_method",
-  "reference_section",
-  "reference",
-  "column_break_2ts3",
   "section_break_xbqa",
+  "result",
   "note",
   "description_section",
   "description",
@@ -102,13 +114,13 @@
   },
   {
    "allow_on_submit": 1,
-   "default": "Registered",
+   "default": "Assigned",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Registered\nPreliminary\nFinal\nAmended\nCorrected\nCancelled\nEntered in Error\nUnknown\nApproved\nRejected",
+   "options": "Assigned\nAccepted\nCollected\nCompleted\nRegistered\nPreliminary\nFinal\nAmended\nCorrected\nCancelled\nEntered in Error\nUnknown\nApproved\nRejected",
    "read_only_depends_on": "eval:doc.docstatus==1;"
   },
   {
@@ -159,7 +171,7 @@
   {
    "fetch_from": "patient.sex",
    "fieldname": "gender",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Gender",
    "options": "Gender"
   },
@@ -303,10 +315,6 @@
    "read_only": 1,
    "read_only_depends_on": "observation_template",
    "reqd": 1
-  },
-  {
-   "fieldname": "column_break_qxq5",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "column_break_yo05",
@@ -571,12 +579,85 @@
    "fieldtype": "Link",
    "label": "Appointment",
    "options": "Patient Appointment"
+  },
+  {
+   "depends_on": "eval:doc.has_component",
+   "fieldname": "result",
+   "fieldtype": "Table",
+   "label": "Result",
+   "options": "Child Observation"
+  },
+  {
+   "fieldname": "column_break_zxoa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_unit",
+   "fieldtype": "Link",
+   "label": "Service Unit",
+   "options": "Healthcare Service Unit"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Link",
+   "label": "Address",
+   "options": "Address"
+  },
+  {
+   "fetch_from": "patient.mobile",
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fetch_from": "address.latitude",
+   "fieldname": "latitude",
+   "fieldtype": "Data",
+   "label": "Latitude"
+  },
+  {
+   "fetch_from": "address.longitude",
+   "fieldname": "longitude",
+   "fieldtype": "Data",
+   "label": "Longitude"
+  },
+  {
+   "fieldname": "address_display",
+   "fieldtype": "Small Text",
+   "label": "Address Display"
+  },
+  {
+   "fieldname": "service_unit_address",
+   "fieldtype": "Link",
+   "label": "Service Unit Address",
+   "options": "Address"
+  },
+  {
+   "fetch_from": "service_unit_address.latitude",
+   "fieldname": "service_unit_latitude",
+   "fieldtype": "Data",
+   "label": "Service Unit Latitude"
+  },
+  {
+   "fetch_from": "service_unit_address.longitude",
+   "fieldname": "service_unit_longitude",
+   "fieldtype": "Data",
+   "label": "Service Unit Longitude"
+  },
+  {
+   "fieldname": "distance",
+   "fieldtype": "Float",
+   "label": "Distance"
+  },
+  {
+   "fieldname": "column_break_oqtz",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-25 09:36:28.860227",
+ "modified": "2026-01-03 14:37:47.358479",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Observation",

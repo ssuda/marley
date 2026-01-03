@@ -41,6 +41,28 @@ frappe.ui.form.on("Observation", {
 
 	observation_template: function (frm) {
 		get_medical_codes(frm);
+		if (frm.doc.observation_template) {
+			frappe.call({
+				method: "healthcare.healthcare.utils.get_observation_template",
+				args: {
+					template_name: frm.doc.observation_template,
+				},
+				callback: function (r) {
+					if (r.message && r.message.has_component) {
+						frm.doc.result = [];
+						$.each(r.message.observation_component, function (i, val) {
+							var child = frm.add_child("result");
+							child.observation_template = val.observation_template;
+							child.observation_category = r.message.observation_category;
+						});
+						frm.refresh_field("result");
+					} else {
+						frm.clear_table("result");
+						frm.refresh_field("result");
+					}
+				},
+			});
+		}
 	},
 });
 

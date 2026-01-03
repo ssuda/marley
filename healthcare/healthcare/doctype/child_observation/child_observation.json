@@ -1,0 +1,402 @@
+{
+ "actions": [],
+ "allow_events_in_timeline": 1,
+ "creation": "2026-01-01 22:38:08.324942",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "observation_template",
+  "column_break_azjr",
+  "observation_category",
+  "template_details_section",
+  "preferred_display_name",
+  "sample_collection_required",
+  "permitted_unit",
+  "column_break_pxgu",
+  "permitted_data_type",
+  "method",
+  "result_section",
+  "result_template",
+  "result_boolean",
+  "result_data",
+  "result_text",
+  "result_float",
+  "result_select",
+  "result_datetime",
+  "result_time",
+  "result_period_from",
+  "result_attach",
+  "result_period_to",
+  "options",
+  "time_of_result",
+  "time_of_approval",
+  "column_break_zrac",
+  "interpretation_template",
+  "result_interpretation",
+  "observation_method",
+  "reference_section",
+  "reference",
+  "column_break_2ts3",
+  "section_break_xbqa",
+  "note",
+  "description_section",
+  "description",
+  "section_break_cxvz",
+  "codification_table",
+  "section_break_vlrn",
+  "reference_doctype",
+  "reference_docname",
+  "sales_invoice",
+  "sales_invoice_status",
+  "sales_invoice_item",
+  "service_request",
+  "column_break_wwnp",
+  "disapproval_reason",
+  "parent_observation",
+  "observation_idx",
+  "days",
+  "invoiced"
+ ],
+ "fields": [
+  {
+   "fieldname": "observation_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Observation Template",
+   "options": "Observation Template",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fetch_from": "observation_template.observation_category",
+   "fieldname": "observation_category",
+   "fieldtype": "Select",
+   "label": "Observation Category",
+   "options": "\nSocial History\nVital Signs\nImaging\nLaboratory\nProcedure\nSurvey\nExam\nTherapy\nActivity",
+   "read_only": 1,
+   "read_only_depends_on": "observation_template",
+   "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "template_details_section",
+   "fieldtype": "Section Break",
+   "label": "Template Details"
+  },
+  {
+   "fetch_from": "observation_template.preferred_display_name",
+   "fieldname": "preferred_display_name",
+   "fieldtype": "Data",
+   "label": "Preferred Display Name",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "observation_template.sample_collection_required",
+   "fieldname": "sample_collection_required",
+   "fieldtype": "Check",
+   "label": "Sample Collection Required",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "observation_template.permitted_unit",
+   "fieldname": "permitted_unit",
+   "fieldtype": "Link",
+   "label": "Permitted Unit",
+   "options": "Lab Test UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_pxgu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "observation_template.permitted_data_type",
+   "fieldname": "permitted_data_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Permitted Data Type",
+   "options": "Quantity\nSelect\nText\nBoolean\nNumeric\nRange\nRatio\nTime\nDateTime\nPeriod\nAttach",
+   "read_only_depends_on": "observation_template"
+  },
+  {
+   "fetch_from": "observation_template.method_value",
+   "fieldname": "method",
+   "fieldtype": "Data",
+   "label": "Method",
+   "read_only": 1
+  },
+  {
+   "fieldname": "result_section",
+   "fieldtype": "Section Break",
+   "label": "Result"
+  },
+  {
+   "fetch_from": "observation_template.result_template",
+   "fieldname": "result_template",
+   "fieldtype": "Link",
+   "label": "Result Template",
+   "options": "Terms and Conditions",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"Attach\";",
+   "fieldname": "result_attach",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Attach Result"
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"Boolean\";",
+   "fieldname": "result_boolean",
+   "fieldtype": "Select",
+   "label": "Result"
+  },
+  {
+   "depends_on": "eval:[\"Range\", \"Ratio\", \"Quantity\", \"Numeric\"].includes(doc.permitted_data_type)",
+   "fieldname": "result_data",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Result"
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"Text\" || doc.observation_category == \"Imaging\";",
+   "fieldname": "result_text",
+   "fieldtype": "Text Editor",
+   "label": "Result"
+  },
+  {
+   "depends_on": "eval:[\"Quantity\", 'Numeric'].includes(doc.permitted_data_type)",
+   "fieldname": "result_float",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Result"
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"Select\";",
+   "fieldname": "result_select",
+   "fieldtype": "Select",
+   "label": "Result"
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"DateTime\";",
+   "fieldname": "result_datetime",
+   "fieldtype": "Datetime",
+   "label": "Result"
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"Time\";",
+   "fieldname": "result_time",
+   "fieldtype": "Datetime",
+   "label": "Result"
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"Period\";",
+   "fieldname": "result_period_from",
+   "fieldtype": "Datetime",
+   "label": "Result Period From"
+  },
+  {
+   "depends_on": "eval:doc.permitted_data_type == \"Period\";",
+   "fieldname": "result_period_to",
+   "fieldtype": "Datetime",
+   "label": "Result Period To"
+  },
+  {
+   "depends_on": "eval:!doc.observation_template && [\"Select\", \"Boolean\"].includes(doc.permitted_data_type)",
+   "fetch_from": "observation_template.options",
+   "fieldname": "options",
+   "fieldtype": "Small Text",
+   "label": "Allowed Options",
+   "read_only": 1,
+   "read_only_depends_on": "observation_template"
+  },
+  {
+   "fieldname": "time_of_result",
+   "fieldtype": "Datetime",
+   "label": "Time of Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "time_of_approval",
+   "fieldtype": "Datetime",
+   "label": "Time of Approval",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zrac",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "observation_template.interpretation_template",
+   "fieldname": "interpretation_template",
+   "fieldtype": "Link",
+   "label": "Interpretation Template",
+   "options": "Terms and Conditions",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.observation_category == \"Imaging\";\n",
+   "fieldname": "result_interpretation",
+   "fieldtype": "Text Editor",
+   "label": "Result Interpretation"
+  },
+  {
+   "fetch_from": "observation_template.method",
+   "fieldname": "observation_method",
+   "fieldtype": "Link",
+   "label": "Observation Method",
+   "options": "Code Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_section",
+   "fieldtype": "Section Break",
+   "label": "Reference"
+  },
+  {
+   "fieldname": "reference",
+   "fieldtype": "Small Text",
+   "label": "Reference",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2ts3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_xbqa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Text Editor",
+   "label": "Note"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "description_section",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "fetch_from": "observation_template.description",
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "codification_table",
+   "fieldtype": "Table",
+   "label": "Medical Codes",
+   "options": "Codification Table"
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "label": "Reference Doctype",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_docname",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference Docname",
+   "options": "reference_doctype",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "label": "Sales Invoice",
+   "options": "Sales Invoice",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "sales_invoice.status",
+   "fieldname": "sales_invoice_status",
+   "fieldtype": "Data",
+   "label": "Sales Invoice Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_invoice_item",
+   "fieldtype": "Data",
+   "label": "Sales Invoice Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_request",
+   "fieldtype": "Link",
+   "label": "Service Request",
+   "options": "Service Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_wwnp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "disapproval_reason",
+   "fieldtype": "Text",
+   "label": "Disapproval Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parent_observation",
+   "fieldtype": "Link",
+   "label": "Parent Observation",
+   "options": "Observation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "observation_idx",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Observation idx"
+  },
+  {
+   "fieldname": "days",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Days",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "invoiced",
+   "fieldtype": "Check",
+   "label": "Invoiced",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_azjr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cxvz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_vlrn",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-03 12:07:29.410763",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Child Observation",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

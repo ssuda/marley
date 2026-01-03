@@ -45,6 +45,12 @@ frappe.ui.form.on("Observation Template", {
 				},
 			};
 		});
+
+		frm.add_custom_button(__("Observation"), function () {
+			frappe.new_doc("Observation", {
+				observation_template: frm.doc.name,
+			});
+		}, __("Create"));
 	},
 
 	permitted_data_type: function (frm) {

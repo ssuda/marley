@@ -48,6 +48,7 @@ class OverlapError(frappe.ValidationError):
 
 class PatientAppointment(Document):
 	def validate(self):
+		print(f"duration inside doctype {self.duration}")
 		self.validate_overlaps()
 		self.validate_based_on_appointments_for()
 		self.validate_service_unit()
@@ -302,13 +303,16 @@ class PatientAppointment(Document):
 				frappe.throw(_("Appointment Date and Time are required."))
 			start_dt = get_datetime(f"{self.appointment_date} {self.appointment_time}")
 
+		#self.duration = self.duration or "15"
+		
 		if self.appointment_end_datetime:
 			end_dt = get_datetime(self.appointment_end_datetime)
 		else:
 			end_dt = add_to_date(start_dt, minutes=int(self.duration) or 0)
+			self.appointment_end_datetime = end_dt.strftime("%Y-%m-%d %H:%M:%S")
 
 		if end_dt <= start_dt:
-			frappe.throw(_("Appointment end must be after start."))
+			frappe.throw(_(f"Appointment end must be after start."))
 
 		rows = frappe.get_all(
 			"Practitioner Availability",

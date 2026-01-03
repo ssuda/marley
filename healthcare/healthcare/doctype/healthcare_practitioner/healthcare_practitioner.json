@@ -18,9 +18,13 @@
   "image",
   "column_break_7",
   "status",
+  "availability_status",
   "mobile_phone",
   "residence_phone",
   "office_phone",
+  "years_of_experience",
+  "rating",
+  "total_reviews",
   "employee_and_user_details_section",
   "practitioner_type",
   "employee",
@@ -29,7 +33,7 @@
   "designation",
   "column_break_17",
   "user_id",
-  "hospital",
+  "service_unit",
   "appointments",
   "practitioner_schedules",
   "google_calendar",
@@ -123,11 +127,6 @@
   {
    "fieldname": "column_break_7",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "hospital",
-   "fieldtype": "Data",
-   "label": "Hospital"
   },
   {
    "fieldname": "mobile_phone",
@@ -393,6 +392,38 @@
    "fieldname": "show_in_portal",
    "fieldtype": "Check",
    "label": "Show in Portal"
+  },
+  {
+   "default": "Available",
+   "fieldname": "availability_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Availability Status",
+   "options": "Available\nBusy\nOffline",
+   "reqd": 1
+  },
+  {
+   "fieldname": "years_of_experience",
+   "fieldtype": "Float",
+   "label": "Years of Experience"
+  },
+  {
+   "fieldname": "rating",
+   "fieldtype": "Rating",
+   "label": "Rating",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_reviews",
+   "fieldtype": "Int",
+   "label": "Total Reviews",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_unit",
+   "fieldtype": "Link",
+   "label": "Healthcare Service Unit",
+   "options": "Healthcare Service Unit"
   }
  ],
  "grid_page_length": 50,
@@ -429,7 +460,7 @@
    "link_fieldname": "practitioner"
   }
  ],
- "modified": "2025-12-25 09:36:35.194204",
+ "modified": "2026-01-02 17:15:26.990187",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Healthcare Practitioner",
@@ -479,7 +510,7 @@
  "row_format": "Dynamic",
  "search_fields": "practitioner_name, mobile_phone, office_phone",
  "show_name_in_global_search": 1,
- "sort_field": "creation",
+ "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
  "title_field": "practitioner_name",

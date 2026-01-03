@@ -30,6 +30,13 @@ from healthcare.setup import setup_healthcare
 
 
 @frappe.whitelist()
+def get_observation_template(template_name):
+	template = frappe.get_doc("Observation Template", template_name)
+	return template
+
+
+
+@frappe.whitelist()
 def get_healthcare_services_to_invoice(patient, customer, company, link_customer=False):
 	patient = frappe.get_doc("Patient", patient)
 	items_to_invoice = []

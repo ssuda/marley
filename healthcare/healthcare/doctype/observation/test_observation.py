@@ -196,6 +196,42 @@ class TestObservation(IntegrationTestCase):
 		with_custom_field_in_patient(self, patient)
 		with_condition_patient(self, patient)
 
+	def test_service_unit_phone_population(self):
+		# Create Service Unit
+		service_unit = frappe.new_doc("Healthcare Service Unit")
+		service_unit.healthcare_service_unit_name = "Test Service Unit For Phone"
+		service_unit.company = "_Test Company"
+		service_unit.service_unit_type = "Inpatient Bed"
+		# Check if service unit exists to avoid unique name error if rerun
+		if not frappe.db.exists("Healthcare Service Unit", "Test Service Unit For Phone"):
+			service_unit.insert(ignore_permissions=True)
+		else:
+			service_unit = frappe.get_doc("Healthcare Service Unit", "Test Service Unit For Phone")
+
+		# Create Contact
+		contact = frappe.new_doc("Contact")
+		contact.first_name = "Test Contact"
+		contact.is_primary_contact = 1
+		contact.mobile_no = "1234567890"
+		contact.append("links", {
+			"link_doctype": "Healthcare Service Unit",
+			"link_name": service_unit.name
+		})
+		contact.insert(ignore_permissions=True)
+
+		# Create Observation
+		patient = create_patient()
+		obs_template = create_observation_template("Test Phone Population")
+		
+		obs = frappe.new_doc("Observation")
+		obs.patient = patient
+		obs.observation_template = obs_template.name
+		obs.status = "Entered in Error" # Just to bypass some validations if any
+		obs.service_unit = service_unit.name
+		obs.save(ignore_permissions=True)
+
+		self.assertEqual(obs.service_unit_phone, "1234567890")
+
 
 def create_sales_invoice(patient, item):
 	sales_invoice = frappe.new_doc("Sales Invoice")

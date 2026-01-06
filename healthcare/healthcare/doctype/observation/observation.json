@@ -14,6 +14,7 @@
   "observation_template",
   "observation_category",
   "appointment",
+  "bill_amount",
   "column_break_7xu5",
   "company",
   "posting_date",
@@ -35,6 +36,8 @@
   "healthcare_practitioner",
   "practitioner_name",
   "service_unit",
+  "service_unit_phone",
+  "service_unit_address_display",
   "column_break_zxoa",
   "service_unit_address",
   "service_unit_latitude",
@@ -120,7 +123,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Assigned\nAccepted\nCollected\nCompleted\nRegistered\nPreliminary\nFinal\nAmended\nCorrected\nCancelled\nEntered in Error\nUnknown\nApproved\nRejected",
+   "options": "Assigned\nAccepted\nCollected\nCompleted\nRegistered\nPreliminary\nFinal\nAmended\nCorrected\nCancelled\nEntered in Error\nUnknown\nApproved\nRejected\nPaid",
    "read_only_depends_on": "eval:doc.docstatus==1;"
   },
   {
@@ -598,6 +601,12 @@
    "options": "Healthcare Service Unit"
   },
   {
+   "fieldname": "service_unit_phone",
+   "fieldtype": "Data",
+   "label": "Service Unit Phone",
+   "options": "Phone"
+  },
+  {
    "fieldname": "address",
    "fieldtype": "Link",
    "label": "Address",
@@ -652,12 +661,22 @@
   {
    "fieldname": "column_break_oqtz",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_unit_address_display",
+   "fieldtype": "Small Text",
+   "label": "Service Unit Address Display"
+  },
+  {
+   "fieldname": "bill_amount",
+   "fieldtype": "Currency",
+   "label": "Bill Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-03 14:37:47.358479",
+ "modified": "2026-01-05 22:19:04.616064",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Observation",

@@ -22,10 +22,78 @@ from healthcare.healthcare.doctype.healthcare_settings.healthcare_settings impor
 	get_income_account,
 )
 from healthcare.healthcare.doctype.lab_test.lab_test import create_multiple
-from healthcare.healthcare.doctype.observation.observation import add_observation
 from healthcare.healthcare.doctype.observation_template.observation_template import (
 	get_observation_template_details,
 )
+from healthcare.setup import setup_healthcare
+import requests
+from frappe.contacts.doctype.address.address import get_address_display
+
+
+def set_service_unit_phone(doc):
+	if doc.service_unit:
+		contact_name = frappe.db.get_value(
+			"Contact",
+			{
+				"is_primary_contact": 1, 
+				"link_doctype": "Healthcare Service Unit", 
+				"link_name": doc.service_unit
+			},
+			"name"
+		)
+		
+		if not contact_name:
+			contact_name = frappe.db.get_value(
+				"Dynamic Link",
+				{
+					"link_doctype": "Healthcare Service Unit",
+					"link_name": doc.service_unit,
+					"parenttype": "Contact"
+				},
+				"parent"
+			)
+
+		if contact_name:
+			doc.service_unit_phone = frappe.db.get_value("Contact", contact_name, "mobile_no")
+
+def set_address_display(doc):
+	if doc.get("address"):
+		doc.address_display = get_address_display(frappe.get_doc("Address", doc.address).as_dict())
+	
+	if doc.get("service_unit_address"):
+		doc.service_unit_address_display = get_address_display(frappe.get_doc("Address", doc.service_unit_address).as_dict())
+
+def calculate_distance(doc):
+	if doc.get("latitude") and doc.get("longitude") and doc.get("service_unit_latitude") and doc.get("service_unit_longitude"):
+		api_key = frappe.db.get_single_value("Google Settings", "api_key")
+		if not api_key:
+			return
+
+		try:
+			url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+			params = {
+				"origins": f"{doc.latitude},{doc.longitude}",
+				"destinations": f"{doc.service_unit_latitude},{doc.service_unit_longitude}",
+				"key": api_key
+			}
+
+			response = requests.get(url, params=params)
+			data = response.json()
+
+			if data.get("status") == "OK":
+				rows = data.get("rows", [])
+				if rows:
+					elements = rows[0].get("elements", [])
+					if elements and elements[0].get("status") == "OK":
+						# distance in km
+						distance_text = elements[0].get("distance", {}).get("text", "")
+						distance_value = elements[0].get("distance", {}).get("value", 0) # in meters
+
+						# Assuming the distance field expects km or similar, but the field type is Float. 
+						# Let's save it as km.
+						doc.distance = flt(distance_value) / 1000.0
+		except Exception:
+			frappe.log_error("Google Maps Distance Matrix Error")
 from healthcare.setup import setup_healthcare
 
 
@@ -1707,6 +1775,7 @@ def insert_diagnostic_report(doc, patient, sample_collection=None):
 def insert_observation_and_sample_collection(
 	doc, patient, grp, sample_collection, child=None, parent_observation=None
 ):
+	from healthcare.healthcare.doctype.observation.observation import add_observation
 	diag_report_required = False
 	if grp.get("has_component"):
 		diag_report_required = True

@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "naming_series:",
- "creation": "2020-09-14 18:33:56.715736",
+ "creation": "2026-01-05 12:38:29.752637",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -11,8 +11,6 @@
   "patient_encounter",
   "patient",
   "patient_name",
-  "patient_age",
-  "inpatient_record",
   "column_break_6",
   "company",
   "status",
@@ -37,10 +35,12 @@
   "service_unit_longitude",
   "service_unit_latitude",
   "service_unit_address_display",
+  "distance",
   "medication_orders_section",
   "medication_orders",
   "section_break_16",
   "total_orders",
+  "bill_amount",
   "column_break_18",
   "completed_orders",
   "amended_from"
@@ -81,24 +81,23 @@
    "read_only": 1
   },
   {
-   "fieldname": "patient_age",
-   "fieldtype": "Data",
-   "label": "Patient Age",
-   "read_only": 1
-  },
-  {
    "fieldname": "column_break_6",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "patient.inpatient_record",
-   "fieldname": "inpatient_record",
+   "fieldname": "company",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Inpatient Record",
-   "options": "Inpatient Record",
-   "read_only": 1,
+   "label": "Company",
+   "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Assigned\nAccepted\nPending\nIn Process\nCompleted\nCancelled\nRejected\nPaid"
   },
   {
    "fetch_from": "patient_encounter.practitioner",
@@ -108,6 +107,10 @@
    "label": "Healthcare Practitioner",
    "options": "Healthcare Practitioner",
    "read_only_depends_on": "patient_encounter"
+  },
+  {
+   "fieldname": "column_break_zxoa",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "start_date",
@@ -123,6 +126,101 @@
    "read_only": 1
   },
   {
+   "fieldname": "age",
+   "fieldtype": "Data",
+   "label": "Age",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.sex",
+   "fieldname": "gender",
+   "fieldtype": "Data",
+   "label": "Gender",
+   "options": "Gender"
+  },
+  {
+   "fieldname": "patient_address_and_contact_section",
+   "fieldtype": "Section Break",
+   "label": "Patient Address and Contact"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Link",
+   "label": "Address",
+   "options": "Address"
+  },
+  {
+   "fetch_from": "patient.mobile",
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "column_break_rkeu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "address.longitude",
+   "fieldname": "longitude",
+   "fieldtype": "Data",
+   "label": "Longitude"
+  },
+  {
+   "fetch_from": "address.latitude",
+   "fieldname": "latitude",
+   "fieldtype": "Data",
+   "label": "Latitude"
+  },
+  {
+   "fieldname": "address_display",
+   "fieldtype": "Small Text",
+   "label": "Address Display"
+  },
+  {
+   "fieldname": "section_break_mrvb",
+   "fieldtype": "Section Break",
+   "label": "Service Unit Address and Contact"
+  },
+  {
+   "fieldname": "service_unit",
+   "fieldtype": "Link",
+   "label": "Service Unit",
+   "options": "Healthcare Service Unit"
+  },
+  {
+   "fieldname": "service_unit_address",
+   "fieldtype": "Link",
+   "label": "Service Unit Address",
+   "options": "Address"
+  },
+  {
+   "fieldname": "service_unit_phone",
+   "fieldtype": "Data",
+   "label": "Service Unit Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "column_break_qcsz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "service_unit_address.longitude",
+   "fieldname": "service_unit_longitude",
+   "fieldtype": "Data",
+   "label": "Service Unit Longitude"
+  },
+  {
+   "fetch_from": "service_unit_address.latitude",
+   "fieldname": "service_unit_latitude",
+   "fieldtype": "Data",
+   "label": "Service Unit Latitude"
+  },
+  {
+   "fieldname": "service_unit_address_display",
+   "fieldtype": "Small Text",
+   "label": "Service Unit Address Display"
+  },
+  {
    "depends_on": "eval: doc.patient && doc.start_date",
    "fieldname": "medication_orders_section",
    "fieldtype": "Section Break",
@@ -132,32 +230,8 @@
    "fieldname": "medication_orders",
    "fieldtype": "Table",
    "label": "Medication Orders",
-   "options": "Inpatient Medication Order Entry"
-  },
-  {
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
+   "options": "Drug Prescription",
    "reqd": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Inpatient Medication Order",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Status",
-   "options": "\nDraft\nSubmitted\nPending\nIn Process\nCompleted\nCancelled",
-   "read_only": 1
   },
   {
    "collapsible": 1,
@@ -184,112 +258,32 @@
    "read_only": 1
   },
   {
-   "fieldname": "service_unit",
+   "fieldname": "amended_from",
    "fieldtype": "Link",
-   "label": "Service Unit",
-   "options": "Healthcare Service Unit"
-  },
-  {
-   "fieldname": "service_unit_phone",
-   "fieldtype": "Data",
-   "label": "Service Unit Phone",
-   "options": "Phone"
-  },
-  {
-   "fieldname": "service_unit_address_display",
-   "fieldtype": "Small Text",
-   "label": "Service Unit Address Display"
-  },
-  {
-   "fieldname": "column_break_zxoa",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "service_unit_address",
-   "fieldtype": "Link",
-   "label": "Service Unit Address",
-   "options": "Address"
-  },
-  {
-   "fetch_from": "service_unit_address.latitude",
-   "fieldname": "service_unit_latitude",
-   "fieldtype": "Data",
-   "label": "Service Unit Latitude"
-  },
-  {
-   "fetch_from": "service_unit_address.longitude",
-   "fieldname": "service_unit_longitude",
-   "fieldtype": "Data",
-   "label": "Service Unit Longitude"
-  },
-  {
-   "fieldname": "age",
-   "fieldtype": "Data",
-   "label": "Age",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Medication Order",
+   "print_hide": 1,
    "read_only": 1
   },
   {
-   "fetch_from": "patient.sex",
-   "fieldname": "gender",
-   "fieldtype": "Data",
-   "label": "Gender",
-   "options": "Gender"
+   "fieldname": "distance",
+   "fieldtype": "Float",
+   "label": "Distance"
   },
   {
-   "fieldname": "address",
-   "fieldtype": "Link",
-   "label": "Address",
-   "options": "Address"
-  },
-  {
-   "fetch_from": "patient.mobile",
-   "fieldname": "phone_number",
-   "fieldtype": "Data",
-   "label": "Phone Number"
-  },
-  {
-   "fetch_from": "address.latitude",
-   "fieldname": "latitude",
-   "fieldtype": "Data",
-   "label": "Latitude"
-  },
-  {
-   "fetch_from": "address.longitude",
-   "fieldname": "longitude",
-   "fieldtype": "Data",
-   "label": "Longitude"
-  },
-  {
-   "fieldname": "address_display",
-   "fieldtype": "Small Text",
-   "label": "Address Display"
-  },
-  {
-   "fieldname": "patient_address_and_contact_section",
-   "fieldtype": "Section Break",
-   "label": "Patient Address and Contact"
-  },
-  {
-   "fieldname": "column_break_rkeu",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_mrvb",
-   "fieldtype": "Section Break",
-   "label": "Service Unit Address and Contact"
-  },
-  {
-   "fieldname": "column_break_qcsz",
-   "fieldtype": "Column Break"
+   "fieldname": "bill_amount",
+   "fieldtype": "Currency",
+   "label": "Bill Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-05 12:37:51.300235",
+ "modified": "2026-01-05 22:19:57.363972",
  "modified_by": "Administrator",
  "module": "Healthcare",
- "name": "Inpatient Medication Order",
+ "name": "Medication Order",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [

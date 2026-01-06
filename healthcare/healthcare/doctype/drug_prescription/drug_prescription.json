@@ -18,7 +18,8 @@
         "dosage",
         "interval",
         "interval_uom",
-        "period",
+        "duration",
+        "duration_uom",
         "quantity",
         "route",
         "number_of_repeats_allowed",
@@ -59,14 +60,19 @@
             "options": "Prescription Dosage"
         },
         {
-            "fetch_from": "medication.default_prescription_duration",
-            "fetch_if_empty": 1,
-            "fieldname": "period",
-            "fieldtype": "Link",
-            "ignore_user_permissions": 1,
+            "fieldname": "duration",
+            "fieldtype": "Int",
             "in_list_view": 1,
-            "label": "Period",
-            "options": "Prescription Duration",
+            "label": "Duration",
+            "reqd": 1
+        },
+        {
+            "default": "Day",
+            "fieldname": "duration_uom",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Duration UOM",
+            "options": "Day\nWeek\nMonth",
             "reqd": 1
         },
         {

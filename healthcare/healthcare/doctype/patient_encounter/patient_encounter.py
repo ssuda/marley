@@ -360,7 +360,7 @@ def make_ip_medication_order(source_name, target_doc=None):
 		for entry in source.drug_prescription:
 			if entry.drug_code:
 				dosage = frappe.get_doc("Prescription Dosage", entry.dosage)
-				dates = get_prescription_dates(entry.period, target.start_date)
+				dates = get_prescription_dates(entry.duration, entry.duration_uom, target.start_date)
 				for date in dates:
 					for dose in dosage.dosage_strength:
 						order = target.append("medication_orders")
@@ -397,9 +397,15 @@ def make_ip_medication_order(source_name, target_doc=None):
 	return doc
 
 
-def get_prescription_dates(period, start_date):
-	prescription_duration = frappe.get_doc("Prescription Duration", period)
-	days = prescription_duration.get_days()
+def get_prescription_dates(duration, duration_uom, start_date):
+	days = 1
+	if duration_uom == "Day":
+		days = duration
+	elif duration_uom == "Week":
+		days = duration * 7
+	elif duration_uom == "Month":
+		days = duration * 30
+
 	dates = [start_date]
 	for i in range(1, days):
 		dates.append(add_days(getdate(start_date), i))

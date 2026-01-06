@@ -116,7 +116,9 @@ class IntegrationTestMedicationOrder(IntegrationTestCase):
 		mock_drug.dosage = self.dosage.name
 		mock_drug.dosage_form = "Tablet" # Assuming dosage form
 		mock_drug.dosage_form = "Tablet" # Assuming dosage form
-		mock_drug.period = "7 Days"
+		mock_drug.dosage_form = "Tablet" # Assuming dosage form
+		mock_drug.duration = 7
+		mock_drug.duration_uom = "Day"
 		mock_drug.quantity = 14
 		mock_drug.route = "Oral"
 		mock_drug.dosage_by_interval = 0
@@ -151,7 +153,8 @@ class IntegrationTestMedicationOrder(IntegrationTestCase):
 			entry1 = mo.medication_orders[0]
 			self.assertEqual(entry1.medication, self.medication.name)
 			self.assertEqual(entry1.dosage, self.dosage.name)
-			self.assertEqual(entry1.period, "7 Days")
+			self.assertEqual(entry1.duration, 7)
+			self.assertEqual(entry1.duration_uom, "Day")
 			self.assertEqual(entry1.quantity, 14)
 			self.assertEqual(entry1.route, "Oral")
 
